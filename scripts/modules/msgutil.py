@@ -6,7 +6,6 @@ import pooltool as pt
 import threading
 import select
 from pooltool import System, Cue
-from pooltool.game.ruleset.datatypes import ShotConstraints, ShotInfo
 from .poolgame import ShotCall, BallPosition
 from enum import IntEnum
 from dataclasses import dataclass
@@ -99,7 +98,7 @@ class LoginFailedMessage(Message):
         self.reason = self.data['reason']
 
 class YourTurnMessage(Message):
-    def __init__(self, system: System, shot_constraints: ShotConstraints, break_shot: bool):
+    def __init__(self, system: System, shot_constraints: pt.ruleset.ShotConstraints, break_shot: bool):
         self.system = system
         self.shot_constraints = shot_constraints
         self.break_shot = break_shot
@@ -112,7 +111,7 @@ class YourTurnMessage(Message):
         raw_system = self.data['system']
         raw_shot_constraints = self.data['shot_constraints']
         self.system = pt.serialize.conversion.converters['json'].structure(raw_system, System)
-        self.shot_constraints = pt.serialize.conversion.converters['json'].structure(raw_shot_constraints, ShotConstraints)
+        self.shot_constraints = pt.serialize.conversion.converters['json'].structure(raw_shot_constraints, pt.ruleset.ShotConstraints)
         self.break_shot = self.data['break_shot']
 
 class MakeShotMessage(Message):
@@ -150,7 +149,7 @@ class GameOverMessage(Message):
         self.scores = self.data['scores']
 
 class BroadcastMessage(Message):
-    def __init__(self, system: System, shot_info: ShotInfo, break_shot: bool, scores: Dict[str, int]):
+    def __init__(self, system: System, shot_info: pt.ruleset.ShotInfo, break_shot: bool, scores: Dict[str, int]):
         self.system = system
         self.shot_info = shot_info
         self.break_shot = break_shot
@@ -165,7 +164,7 @@ class BroadcastMessage(Message):
         raw_system = self.data['system']
         raw_shot_info = self.data['shot_info']
         self.system = pt.serialize.conversion.converters['json'].structure(raw_system, System)
-        self.shot_info = pt.serialize.conversion.converters['json'].structure(raw_shot_info, ShotInfo)
+        self.shot_info = pt.serialize.conversion.converters['json'].structure(raw_shot_info, pt.ruleset.ShotInfo)
         self.break_shot = self.data['break_shot']
         self.scores = self.data['scores']
 

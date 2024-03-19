@@ -6,15 +6,13 @@ import time
 import uuid
 import numpy as np
 import pooltool as pt
-from pooltool import System
-from pooltool.game.ruleset.datatypes import ShotConstraints
 
 from modules import msgutil
 from modules.poolgame import BallPosition, ShotCall
 
 #make random shot for testing
 #modify this function to create your own pool playing bot
-def calculate_shot(system: System, shot_constraints: ShotConstraints, break_shot: bool = False):
+def calculate_shot(system: pt.System, shot_constraints: pt.ruleset.ShotConstraints, break_shot: bool = False):
     cue = pt.Cue()
     ball_id = np.random.choice(shot_constraints.hittable)
     V0 = np.random.uniform(1, 2)

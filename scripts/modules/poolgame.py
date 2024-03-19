@@ -2,12 +2,11 @@ import random
 import numpy as np
 import pooltool as pt
 from dataclasses import dataclass
-from pooltool.game.ruleset.datatypes import ShotConstraints
 from typing import Optional, List, Tuple
 
 def get_initial_system(game_type: pt.GameType) -> pt.System:
     table = pt.Table.from_game_type(game_type)
-    balls = pt.get_rack(game_type = game_type, table = table, params=None, ballset=None, spacing_factor=1e-3)
+    balls = pt.get_rack(game_type = game_type, table = table, ball_params=None, ballset=None, spacing_factor=1e-3)
     cue = pt.Cue()
     system = pt.System(cue, table, balls)
     return system
@@ -38,11 +37,11 @@ class PoolGame:
         self._system.cue = cue
         if (cue_ball_spot is not None) and ('cue' in self._ruleset.shot_constraints.movable):
             ball_in_hand = self._ruleset.shot_constraints.ball_in_hand
-            if ball_in_hand == pt.game.ruleset.datatypes.BallInHandOptions.BEHIND_LINE:
+            if ball_in_hand == pt.ruleset.BallInHandOptions.BEHIND_LINE:
                 if cue_ball_spot.y <= self._system.table.l / 4:
-                    pt.game.ruleset.utils.respot(self._system, 'cue', cue_ball_spot.x, cue_ball_spot.y)
-            elif ball_in_hand == pt.game.ruleset.datatypes.BallInHandOptions.ANYWHERE:
-                pt.game.ruleset.utils.respot(self._system, 'cue', cue_ball_spot.x, cue_ball_spot.y)
+                    pt.ruleset.utils.respot(self._system, 'cue', cue_ball_spot.x, cue_ball_spot.y)
+            elif ball_in_hand == pt.ruleset.BallInHandOptions.ANYWHERE:
+                pt.ruleset.utils.respot(self._system, 'cue', cue_ball_spot.x, cue_ball_spot.y)
 
         if call is None:
             self._ruleset.shot_constraints.call_shot = False
@@ -54,7 +53,7 @@ class PoolGame:
         self._history.append(self._system.copy())
         return self._ruleset.shot_info, self._system.copy()
 
-    def get_shot_constraints(self) -> ShotConstraints:
+    def get_shot_constraints(self) -> pt.ruleset.ShotConstraints:
         return self._ruleset.shot_constraints
 
     def get_system(self) -> pt.System:
@@ -139,7 +138,7 @@ class PoolMatch:
     def get_system(self) -> pt.System:
         return self._current_game.get_system()
 
-    def get_shot_constraints(self) -> ShotConstraints:
+    def get_shot_constraints(self) -> pt.ruleset.ShotConstraints:
         return self._current_game.get_shot_constraints()
 
     def is_break(self) -> bool:

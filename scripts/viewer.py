@@ -17,7 +17,7 @@ from direct.task.Task import Task
 
 def get_initial_system(game_type: pt.GameType) -> pt.System:
     table = pt.Table.from_game_type(game_type)
-    balls = pt.get_rack(game_type = game_type, table = table, params=None, ballset=None, spacing_factor=1e-3)
+    balls = pt.get_rack(game_type = game_type, table = table, ball_params=None, ballset=None, spacing_factor=1e-3)
     cue = pt.Cue(theta=0)
     system = pt.System(cue, table, balls)
     return system
